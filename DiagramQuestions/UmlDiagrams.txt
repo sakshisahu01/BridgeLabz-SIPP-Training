@@ -1,0 +1,107 @@
+ > Sample Problem 1: School Results Application
+ > Class Diagram
+
++----------------+       1     *       +-------------+
+|   Student      |--------------------|   Subject    |
++----------------+    Aggregation     +-------------+
+| - name: String |                    | - name: String
+| - id: int      |                    | - marks: int
++----------------+                    +-------------+
+
+         |
+         | uses
+         |
+         V
++----------------------+
+|   GradeCalculator    |
++----------------------+
+| +calculateGrade():String |
++----------------------+
+
+
+
+>  Object Diagram (Snapshot)
+
+Student: John
+|
++-- Subject: Maths
+|      marks = 90
+|
++-- Subject: Science
+       marks = 85
+
+
+
+> Sequence Diagram
+
+Student         GradeCalculator
+   |                   |
+   |  requestGrade()   |
+   |------------------>|
+   |                   |
+   |  computeGrade()   |
+   |<------------------|
+   |   return grade    |
+
+
+
+> Sample Problem 2: Grocery Store Bill Generation Application
+> Class Diagram
+
++----------------+      1     *      +-------------+
+|   Customer     |------------------|   Product    |
++----------------+   Composition    +-------------+
+| - name: String |                  | - name: String
+| - id: int      |                  | - quantity: double
++----------------+                  | - pricePerUnit: double
+                                    +-------------+
+
+         |
+         | uses
+         |
+         V
++----------------------+
+|   BillGenerator      |
++----------------------+
+| +generateBill():double |
++----------------------+
+
+
+>  Object Diagram (Snapshot)
+
+
+Customer: Alice
+|
++-- Product: Apples
+|     quantity = 2kg
+|     pricePerKg = $3
+|
++-- Product: Milk
+      quantity = 1L
+      pricePerL = $2
+
+
+
+>  Sequence Diagram
+
+Customer        BillGenerator
+   |                   |
+   |  requestBill()    |
+   |------------------>|
+   |                   |
+   | generateTotal()   |
+   |<------------------|
+   | return totalBill  |
+
+
+
+* Comparison Table *
+ 
+|      Feature                School Results Application             Grocery Store Bill Application 
+|----------------------|--------------------------------------|----------------------------------------|
+|    Classes           | Student, Subject, GradeCalculator    | Customer, Product, BillGenerator       |
+| Relationships        | Aggregation                          | Composition                            |
+| Functionality        | Calculate grade                      | Generate total bill                    |
+| Key Entities         | Students, Subjects, Grades           | Customers, Products, Bills             |
+
+
