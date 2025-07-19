@@ -160,6 +160,53 @@ We began our Data Structures journey with the foundational concept of **Linked L
 
 ---
 
+BridgeLabz-SIPP-Training-2025/
+│
+├── 📁 Day1_JavaProblems/
+│ └── 📄 <Java programs for Day 1>
+│
+├── 📁 Day2_JavaFundamentals/
+│ └── 📄 <Java programs for Day 2>
+│
+├── 📁 Day3_ControlFlows/
+│ └── 📄 <Java programs for Day 3: if-else, switch, loops>
+│
+├── 📁 Day4_Arrays/
+│ └── 📄 <Java programs for Day 4: arrays and multidimensional arrays>
+│
+├── 📁 Day5_Strings/
+│ └── 📄 <Java programs for Day 5: strings, StringBuilder, etc.>
+│
+├── 📁 Day6_Methods/
+│ └── 📄 <Java programs for Day 6: method creation, overloading>
+│
+├── 📁 Day7_BuiltInFunctions/
+│ └── 📄 <Programs using Math, Arrays, Collections, Wrapper classes>
+│
+├── 📁 Day8_ExtraProblems/
+│ └── 📄 <Logical, pattern-based, and recursion problems>
+│
+├── 📄 README.md
+│
+├── 🔀 Branch: OOps/
+│ ├── 📁 Day9_OOP_Basics/
+│ ├── 📁 Day10_Constructors_AccessModifiers/
+│ ├── 📁 Day11_This_Static_Final/
+│ ├── 📁 Day12_ObjectOrientedDesignPrinciples/
+│ └── 📁 Day14_Encapsulation_Polymorphism_Interface_Abstract/
+│
+├── 🔀 Branch: Workshop/
+│ └── 📁 Day13_Workshop_Programs/
+│ ├── 📄 E_Commerce_Product.java
+│ ├── 📄 Student_Data.java
+│ └── 📄 EduQuiz.java
+│
+└── 🔀 Branch: DSA/
+└── 📁 Day15_Linked_List_Programs/
+├── 📄 Node.java
+├── 📄 SinglyLinkedList.java
+└── 📄 LinkedListDemo.java
+
 
 
 
