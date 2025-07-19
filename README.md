@@ -158,8 +158,6 @@ We began our Data Structures journey with the foundational concept of **Linked L
 
 ---
 
-## 👩‍💻 Author
-**Sakshi Sahu**  
-Feel free to connect for feedback or collaboration.
+
 
 
