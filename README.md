@@ -7,6 +7,8 @@ This repository contains **daily assignments**, **exercises**, and **hands-on co
 
 ## 📅 Training Progress
 
+<h2 style="color:blue">Day 1 – Java Problems</h2>
+
 ### ✅ Day 1 – Java Problems
 Solved basic Java coding problems to strengthen programming logic.  
 **Focused on:**
