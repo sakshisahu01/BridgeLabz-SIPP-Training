@@ -1,0 +1,13 @@
+com\junit\examples\BankAccountTest.class
+com\junit\examples\CalculatorTest.class
+com\junit\examples\PasswordValidatorTest.class
+com\junit\examples\ListManagerTest.class
+com\junit\examples\TemperatureConverterTest.class
+com\junit\examples\FileProcessorTest.class
+com\junit\examples\ExceptionHandlerTest.class
+com\junit\examples\DatabaseConnectionTest.class
+com\junit\examples\StringUtilsTest.class
+com\junit\examples\UserRegistrationTest.class
+com\junit\examples\NumberUtilsTest.class
+com\junit\examples\PerformanceTaskTest.class
+com\junit\examples\DateFormatterTest.class

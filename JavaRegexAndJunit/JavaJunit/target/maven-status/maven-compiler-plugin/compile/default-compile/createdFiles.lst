@@ -1,0 +1,13 @@
+com\junit\examples\TemperatureConverter.class
+com\junit\examples\ExceptionHandler.class
+com\junit\examples\PerformanceTask.class
+com\junit\examples\ListManager.class
+com\junit\examples\NumberUtils.class
+com\junit\examples\DateFormatter.class
+com\junit\examples\Calculator.class
+com\junit\examples\PasswordValidator.class
+com\junit\examples\StringUtils.class
+com\junit\examples\DatabaseConnection.class
+com\junit\examples\BankAccount.class
+com\junit\examples\FileProcessor.class
+com\junit\examples\UserRegistration.class
