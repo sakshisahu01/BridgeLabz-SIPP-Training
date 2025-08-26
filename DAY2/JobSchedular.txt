@@ -1,0 +1,19 @@
+
+class Job {
+    id: String
+    deadline: int
+    processingTime: int
+}
+
+
+class JobScheduler {
+    priorityQueue<Job> jobs  
+
+    method addJob(job: Job):
+        insert job into priorityQueue
+
+    method executeJobs():
+        while priorityQueue not empty:
+            job = removeMin(priorityQueue)  
+            print("Executing Job: " + job.id + " (deadline=" + job.deadline + ")")
+}

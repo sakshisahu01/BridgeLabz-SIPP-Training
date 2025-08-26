@@ -1,0 +1,31 @@
+// Item class
+class Item {
+    name: String
+    price: double
+}
+
+// Shopping Cart
+class ShoppingCart {
+    cart: List<Item>
+
+    constructor():
+        cart = empty list
+
+    method addItem(item: Item):
+        cart.add(item)
+
+    // Generic method to calculate total price
+    method<T extends Item> calculateTotalPrice(list<T> items) -> double:
+        total = 0
+        for each item in items:
+            total += item.price
+        return total
+}
+
+// Main
+method main():
+    cart = new ShoppingCart()
+    cart.addItem(new Item("Laptop", 50000))
+    cart.addItem(new Item("Mouse", 500))
+
+    print("Total Cart Value: " + cart.calculateTotalPrice(cart.cart))

@@ -1,0 +1,36 @@
+
+abstract class Crop {
+    name: String
+    
+    constructor(name)
+        this.name = name
+    
+    abstract method waterRequirement() -> int
+    abstract method harvestTime() -> int
+}
+
+
+class Rice extends Crop {
+    method waterRequirement() -> int:
+        return 100 
+    
+    method harvestTime() -> int:
+        return 120  
+}
+
+
+class Wheat extends Crop {
+    method waterRequirement() -> int:
+        return 60
+    
+    method harvestTime() -> int:
+        return 90
+}
+
+
+method main():
+    crop1 = new Rice("Rice")
+    crop2 = new Wheat("Wheat")
+
+    print(crop1.name + " requires " + crop1.waterRequirement() + "L water")
+    print(crop2.name + " harvests in " + crop2.harvestTime() + " days")

@@ -1,0 +1,36 @@
+
+class Doctor {
+    name: String
+    specialization: String
+}
+
+
+class Hospital {
+    departmentDoctors: Map<String, List<Doctor>>
+
+    constructor():
+        departmentDoctors = empty map
+
+    method addDoctor(department: String, doctor: Doctor):
+        if department not in departmentDoctors:
+            departmentDoctors[department] = new List<Doctor>()
+        departmentDoctors[department].add(doctor)
+
+    method filterDoctorsBySpecialization(specialization: String) -> List<Doctor>:
+        result = new List<Doctor>()
+        for each dept in departmentDoctors.keys:
+            for each doc in departmentDoctors[dept]:
+                if doc.specialization == specialization:
+                    result.add(doc)
+        return result
+}
+
+
+method main():
+    hospital = new Hospital()
+    hospital.addDoctor("Cardiology", new Doctor("Dr. Sharma", "Cardiologist"))
+    hospital.addDoctor("Neurology", new Doctor("Dr. Gupta", "Neurologist"))
+    hospital.addDoctor("General", new Doctor("Dr. Mehta", "Cardiologist"))
+
+    cardiologists = hospital.filterDoctorsBySpecialization("Cardiologist")
+    print("Cardiologists: " + cardiologists)

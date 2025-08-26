@@ -1,0 +1,23 @@
+
+class QuizTimer {
+    timeSlots[]  
+    currentIndex: int
+
+    constructor(slots: int):
+        timeSlots = new array[slots]
+        currentIndex = 0
+
+    method setTimeForQuestion(index, time):
+        timeSlots[index] = time
+
+    method startQuiz():
+        for i in range(0, length of timeSlots):
+            currentIndex = i
+            totalTime = timeSlots[i]
+            
+            for t in range(totalTime down to 1):
+                if t <= 5:
+                    print("Warning! Only " + t + " seconds left for Q" + (i+1))
+                wait(1)
+            print("Time over for Q" + (i+1))
+}
