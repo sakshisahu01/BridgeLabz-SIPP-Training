@@ -1,0 +1,26 @@
+class Transaction<T> {
+    transactionId: String
+    paymentMethod: T
+
+    constructor(id, method):
+        transactionId = id
+        paymentMethod = method
+
+    method process():
+        print("Processing transaction: " + transactionId + " using " + paymentMethod)
+}
+
+// Payment methods
+class UPI { id: String }
+class Card { number: String }
+class NetBanking { account: String }
+
+// Main
+method main():
+    upiTx = new Transaction<UPI>("TXN001", new UPI("rahul@upi"))
+    cardTx = new Transaction<Card>("TXN002", new Card("1234-5678-9012"))
+    netTx = new Transaction<NetBanking>("TXN003", new NetBanking("ACC123"))
+
+    upiTx.process()
+    cardTx.process()
+    netTx.process()

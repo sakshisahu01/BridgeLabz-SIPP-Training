@@ -1,0 +1,34 @@
+class Patient {
+    id: String
+    name: String
+    age: int
+}
+
+class PatientRecordManager {
+    records: HashMap<String, Patient>
+
+    constructor():
+        records = new HashMap()
+
+    method addPatient(patient: Patient):
+        records[patient.id] = patient
+
+    method getPatient(id: String) -> Patient:
+        return records[id]
+
+    method updatePatient(id: String, newName: String, newAge: int):
+        if id in records:
+            records[id].name = newName
+            records[id].age = newAge
+
+    method deletePatient(id: String):
+        remove records[id]
+}
+
+// Main
+method main():
+    manager = new PatientRecordManager()
+    manager.addPatient(new Patient("P01", "Anil", 30))
+    manager.updatePatient("P01", "Anil Kumar", 31)
+    print(manager.getPatient("P01"))
+    manager.deletePatient("P01")

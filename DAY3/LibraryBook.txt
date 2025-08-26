@@ -1,0 +1,20 @@
+class Book {
+    title: String
+    year: int
+    rating: double
+}
+
+// Main
+method main():
+    books = List of Book[
+        new Book("Book1", 2018, 4.7),
+        new Book("Book2", 2012, 4.8),
+        new Book("Book3", 2020, 4.3)
+    ]
+
+    filteredBooks = books.stream()
+                         .filter(book -> book.year > 2015)
+                         .filter(book -> book.rating > 4.5)
+                         .collect(toList)
+
+    print("Filtered Books: " + filteredBooks)

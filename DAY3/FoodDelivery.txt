@@ -1,0 +1,40 @@
+class Customer {
+    name: String
+    address: String
+}
+
+class Restaurant {
+    name: String
+    location: String
+}
+
+class DeliveryBoy {
+    name: String
+    contact: String
+}
+
+class Order {
+    customer: Customer
+    restaurant: Restaurant
+    deliveryBoy: DeliveryBoy
+    items: List<String>
+
+    constructor(cust, rest, boy, items):
+        customer = cust
+        restaurant = rest
+        deliveryBoy = boy
+        this.items = items
+
+    method printOrderDetails():
+        print("Customer: " + customer.name)
+        print("Restaurant: " + restaurant.name)
+        print("Delivery Boy: " + deliveryBoy.name)
+        print("Items: " + items)
+}
+
+method main():
+    cust = new Customer("Rahul", "Delhi")
+    rest = new Restaurant("Pizza Hut", "CP")
+    boy = new DeliveryBoy("Amit", "9999999999")
+    order = new Order(cust, rest, boy, ["Pizza", "Coke"])
+    order.printOrderDetails()

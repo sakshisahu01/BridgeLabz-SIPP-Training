@@ -1,0 +1,42 @@
+interface Searchable {
+    method search(keyword: String)
+}
+
+interface Printable {
+    method print()
+}
+
+class LabReport implements Searchable, Printable {
+    reportId: String
+    details: String
+
+    method search(keyword):
+        if keyword in details:
+            print("Found in Lab Report")
+
+    method print():
+        print("Lab Report: " + reportId + " -> " + details)
+}
+
+class Prescription implements Searchable, Printable {
+    prescriptionId: String
+    medicines: List<String>
+
+    method search(keyword):
+        if keyword in medicines:
+            print("Found in Prescription")
+
+    method print():
+        print("Prescription: " + prescriptionId + " -> " + medicines)
+}
+
+
+method main():
+    report = new LabReport("R101", "Blood test normal")
+    presc = new Prescription("P202", ["Paracetamol", "Vitamin C"])
+
+    report.search("Blood")
+    presc.search("Paracetamol")
+
+    report.print()
+    presc.print()

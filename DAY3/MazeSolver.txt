@@ -1,0 +1,23 @@
+class MazeSolver {
+    maze[][]    
+    visited[][]  
+
+    method solveMaze(x, y, destX, destY) -> boolean:
+        if (x,y) is out of bounds or maze[x][y] == 1 or visited[x][y] == true:
+            return false
+
+        if (x,y) == (destX,destY):
+            print("Reached destination at " + x + "," + y)
+            return true
+
+        visited[x][y] = true
+
+       
+        if solveMaze(x+1,y,destX,destY) return true
+        if solveMaze(x-1,y,destX,destY) return true
+        if solveMaze(x,y+1,destX,destY) return true
+        if solveMaze(x,y-1,destX,destY) return true
+
+        visited[x][y] = false   
+        return false
+}
