@@ -1,0 +1,45 @@
+interface Rentable {
+    method rent()
+    method returnVehicle()
+}
+
+abstract class Vehicle implements Rentable {
+    model: String
+    pricePerDay: double
+}
+
+class Car extends Vehicle {
+    method rent():
+        print("Car rented: " + model)
+
+    method returnVehicle():
+        print("Car returned: " + model)
+}
+
+class Bike extends Vehicle {
+    method rent():
+        print("Bike rented: " + model)
+
+    method returnVehicle():
+        print("Bike returned: " + model)
+}
+
+// Factory for vehicle creation
+class VehicleFactory {
+    static method createVehicle(type: String, model: String, price: double) -> Vehicle:
+        if type == "CAR":
+            return new Car(model, price)
+        else if type == "BIKE":
+            return new Bike(model, price)
+        else:
+            return null
+}
+
+// Main
+method main():
+    car1 = VehicleFactory.createVehicle("CAR", "Honda City", 1500)
+    bike1 = VehicleFactory.createVehicle("BIKE", "Yamaha", 500)
+
+    car1.rent()
+    bike1.rent()
+    car1.returnVehicle()

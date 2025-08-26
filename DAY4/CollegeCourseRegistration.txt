@@ -1,0 +1,37 @@
+class Student {
+    name: String
+}
+
+class Course {
+    name: String
+}
+
+class College {
+    registrations: Map<Course, List<Student>>
+
+    constructor():
+        registrations = empty map
+
+    method registerStudent(course: Course, student: Student):
+        if course not in registrations:
+            registrations[course] = new List<Student>()
+        registrations[course].add(student)
+
+    method displayStudents(course: Course):
+        print("Students in " + course.name + ": " + registrations[course])
+}
+
+// Main
+method main():
+    c1 = new Course("Math")
+    c2 = new Course("CS")
+
+    s1 = new Student("Aman")
+    s2 = new Student("Riya")
+
+    college = new College()
+    college.registerStudent(c1, s1)
+    college.registerStudent(c1, s2)
+    college.registerStudent(c2, s1)
+
+    college.displayStudents(c1)

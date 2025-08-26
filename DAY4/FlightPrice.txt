@@ -1,0 +1,45 @@
+class Flight {
+    flightId: String
+    price: double
+    duration: int   // in minutes
+}
+
+class FlightComparator {
+    method compare(f1: Flight, f2: Flight) -> int:
+        if f1.price != f2.price:
+            return f1.price - f2.price
+        else:
+            return f1.duration - f2.duration
+}
+
+class FlightAnalyzer {
+    method mergeSort(flights[], left, right, comparator):
+        if left < right:
+            mid = (left + right)/2
+            mergeSort(flights, left, mid, comparator)
+            mergeSort(flights, mid+1, right, comparator)
+            merge(flights, left, mid, right, comparator)
+
+    method merge(flights[], left, mid, right, comparator):
+        temp = []
+        i = left, j = mid+1
+        while i <= mid and j <= right:
+            if comparator.compare(flights[i], flights[j]) <= 0:
+                temp.add(flights[i++])
+            else:
+                temp.add(flights[j++])
+        add remaining elements
+        copy temp back to flights
+}
+
+// Main
+method main():
+    flights = [
+        new Flight("AI101", 5000, 180),
+        new Flight("AI102", 4500, 240),
+        new Flight("AI103", 5000, 150)
+    ]
+    analyzer = new FlightAnalyzer()
+    analyzer.mergeSort(flights, 0, length-1, new FlightComparator())
+    print("Sorted Flights: " + flights)
+    

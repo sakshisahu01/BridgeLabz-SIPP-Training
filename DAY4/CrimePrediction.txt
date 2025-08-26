@@ -1,0 +1,35 @@
+class Graph {
+    adjList: Map<String, List<String>>   // zone -> connected zones
+    crimeData: Map<String, int>          // zone -> crimeCount
+
+    method addEdge(zone1, zone2):
+        adjList[zone1].add(zone2)
+        adjList[zone2].add(zone1)
+
+    method addCrimeData(zone, count):
+        crimeData[zone] = count
+
+    method dfs(zone, visited, threshold):
+        visited.add(zone)
+        if crimeData[zone] > threshold:
+            print("High-risk zone: " + zone)
+
+        for neighbor in adjList[zone]:
+            if neighbor not in visited:
+                dfs(neighbor, visited, threshold)
+
+    method analyzeHighRisk(startZone, threshold):
+        visited = empty set
+        dfs(startZone, visited, threshold)
+}
+
+// Main
+method main():
+    city = new Graph()
+    city.addEdge("ZoneA", "ZoneB")
+    city.addEdge("ZoneB", "ZoneC")
+    city.addCrimeData("ZoneA", 5)
+    city.addCrimeData("ZoneB", 12)
+    city.addCrimeData("ZoneC", 20)
+
+    city.analyzeHighRisk("ZoneA", 10)   // finds zones with crime > 10

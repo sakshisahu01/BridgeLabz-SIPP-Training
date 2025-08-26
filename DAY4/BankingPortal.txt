@@ -1,0 +1,45 @@
+class Account {
+    accountNumber: String
+    balance: double
+
+    constructor(accNo, bal):
+        accountNumber = accNo
+        balance = bal
+
+    method deposit(amount: double):
+        balance += amount
+        print("Deposited " + amount + ", New Balance = " + balance)
+
+    method withdraw(amount: double):
+        print("Base withdrawal rule (override in subclasses)")
+}
+
+class SavingAccount extends Account {
+    minBalance: double = 1000
+
+    method withdraw(amount: double):
+        if balance - amount >= minBalance:
+            balance -= amount
+            print("Withdrawn " + amount + " from Savings. Balance = " + balance)
+        else:
+            print("Cannot withdraw! Minimum balance must be maintained.")
+}
+
+class CurrentAccount extends Account {
+    overdraftLimit: double = 5000
+
+    method withdraw(amount: double):
+        if balance - amount >= -overdraftLimit:
+            balance -= amount
+            print("Withdrawn " + amount + " from Current. Balance = " + balance)
+        else:
+            print("Overdraft limit exceeded!")
+}
+
+// Main
+method main():
+    acc1 = new SavingAccount("S001", 5000)
+    acc2 = new CurrentAccount("C101", 2000)
+
+    acc1.withdraw(4500)   // fails
+    acc2.withdraw(6000)   // allowed due to overdraft

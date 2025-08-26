@@ -1,0 +1,27 @@
+class Transaction {
+    id: String
+    merchant: String
+    month: String
+    amount: double
+}
+
+// Main
+method main():
+    transactions = List of Transaction[
+        new Transaction("T1", "Amazon", "Jan", 2000),
+        new Transaction("T2", "Flipkart", "Jan", 1500),
+        new Transaction("T3", "Amazon", "Feb", 3000),
+        new Transaction("T4", "Amazon", "Jan", 1000)
+    ]
+
+    // Group by merchant and month
+    report = transactions.stream()
+                         .collect(groupingBy(
+                             tx -> tx.merchant,
+                             groupingBy(
+                                 tx -> tx.month,
+                                 summingDouble(tx -> tx.amount)
+                             )
+                         ))
+
+    print("Transaction Report: " + report)
