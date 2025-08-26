@@ -1,0 +1,30 @@
+class Reading {
+    value: int   // kW
+}
+
+class EnergyTracker {
+    data: Map<String, Map<String, List<Reading>>>   // Zone -> Day -> Readings
+
+    method addReading(zone, day, reading):
+        if zone not in data:
+            data[zone] = new Map()
+        if day not in data[zone]:
+            data[zone][day] = new List()
+        data[zone][day].add(reading)
+
+    method generatePeakReport():
+        for each zone in data:
+            for each day in data[zone]:
+                maxLoad = data[zone][day].stream()
+                             .map(r -> r.value)
+                             .max()
+                print(zone + " " + day + " Peak = " + maxLoad + "kW")
+}
+
+// Main
+method main():
+    tracker = new EnergyTracker()
+    tracker.addReading("Zone-A", "2025-08-01", new Reading(120))
+    tracker.addReading("Zone-A", "2025-08-01", new Reading(200))
+    tracker.addReading("Zone-B", "2025-08-01", new Reading(350))
+    tracker.generatePeakReport()

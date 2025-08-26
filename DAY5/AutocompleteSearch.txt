@@ -1,0 +1,50 @@
+class TrieNode {
+    children: Map<char, TrieNode>
+    isEndOfWord: boolean
+    popularity: int
+}
+
+class Trie {
+    root: TrieNode
+
+    method insert(word, popularity=0):
+        node = root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = new TrieNode()
+            node = node.children[char]
+        node.isEndOfWord = true
+        node.popularity = popularity
+
+    method searchPrefix(prefix) -> List<String>:
+        node = root
+        for char in prefix:
+            if char not in node.children:
+                return []
+            node = node.children[char]
+        return collectWords(node, prefix)
+
+    method collectWords(node, prefix) -> List<String>:
+        results = []
+        if node.isEndOfWord:
+            results.add((prefix, node.popularity))
+        for childChar in node.children.keys:
+            results += collectWords(node.children[childChar], prefix+childChar)
+        return results
+
+    method getSuggestions(prefix, topN):
+        results = searchPrefix(prefix)
+        sort results by popularity DESC
+        return first topN
+}
+
+// Main
+method main():
+    trie = new Trie()
+    trie.insert("pizza hut", 50)
+    trie.insert("pizza point", 30)
+    trie.insert("pita bread", 70)
+    trie.insert("pizzeria", 20)
+    trie.insert("pineapple cafe", 10)
+
+    print(trie.getSuggestions("pi", 3))  // pita bread, pizza hut, pizza point

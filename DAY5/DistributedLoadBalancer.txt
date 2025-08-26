@@ -1,0 +1,34 @@
+class LoadBalancer {
+    servers: Queue<String>
+
+    constructor(initialServers):
+        servers = new Queue()
+        for s in initialServers:
+            servers.enqueue(s)
+
+    method addServer(server: String):
+        servers.enqueue(server)
+
+    method removeServer(server: String):
+        tempQueue = new Queue()
+        while not servers.isEmpty():
+            s = servers.dequeue()
+            if s != server:
+                tempQueue.enqueue(s)
+        servers = tempQueue
+
+    method processRequests(requests: List<String>):
+        for req in requests:
+            server = servers.dequeue()
+            print(req + " → " + server)
+            servers.enqueue(server)
+}
+
+// Main
+method main():
+    lb = new LoadBalancer(["S1","S2","S3"])
+    lb.processRequests(["R1","R2","R3"])
+    lb.addServer("S4")
+    lb.processRequests(["R4","R5"])
+    lb.removeServer("S2")
+    lb.processRequests(["R6","R7"])

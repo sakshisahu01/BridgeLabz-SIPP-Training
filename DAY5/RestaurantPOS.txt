@@ -1,0 +1,73 @@
+abstract class TaxCalculator {
+    method calculateTax(amount: double) -> double
+}
+
+class FoodTax extends TaxCalculator {
+    method calculateTax(amount):
+        return amount * 0.05
+}
+
+class BeverageTax extends TaxCalculator {
+    method calculateTax(amount):
+        return amount * 0.12
+}
+
+class ImportedTax extends TaxCalculator {
+    method calculateTax(amount):
+        return (amount * 0.05) + (amount * 0.10) // customs duty extra
+}
+
+interface DiscountPolicy {
+    method applyDiscount(total: double) -> double
+}
+
+class NoDiscount implements DiscountPolicy {
+    method applyDiscount(total):
+        return total
+}
+
+class FlatDiscount implements DiscountPolicy {
+    method applyDiscount(total):
+        return total - 100
+}
+
+class PercentageDiscount implements DiscountPolicy {
+    percent: double
+    constructor(p): percent = p
+
+    method applyDiscount(total):
+        return total - (total * percent/100)
+}
+
+// Menu Item
+class MenuItem {
+    name: String
+    price: double
+    taxCalculator: TaxCalculator
+
+    method getFinalPrice():
+        return price + taxCalculator.calculateTax(price)
+}
+
+// POS System
+class POS {
+    items: List<MenuItem>
+    discount: DiscountPolicy
+
+    method calculateBill():
+        subtotal = 0
+        for item in items:
+            subtotal += item.getFinalPrice()
+        return discount.applyDiscount(subtotal)
+}
+
+// Main
+method main():
+    item1 = new MenuItem("Paneer Tikka", 200, new FoodTax())
+    item2 = new MenuItem("Coke", 100, new BeverageTax())
+    item3 = new MenuItem("Imported Cheese", 500, new ImportedTax())
+
+    pos = new POS([item1,item2,item3], new PercentageDiscount(10))
+    print("Final Bill: " + pos.calculateBill())
+
+    // Tomorrow → add Buy1Get1Discount without touching main POS logic
