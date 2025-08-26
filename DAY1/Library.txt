@@ -1,0 +1,36 @@
+CLASS Member
+    ATTRIBUTES:
+        name : STRING
+        ID : STRING
+        membershipDate : DATE
+        validityPeriod : INTEGER   
+
+    CONSTRUCTOR(name, ID, membershipDate, validityPeriod)
+        SET name = name
+        SET ID = ID
+        SET membershipDate = membershipDate
+        SET validityPeriod = validityPeriod
+
+    METHOD checkMembershipValidity(currentDate : DATE) RETURNS BOOLEAN
+        CALCULATE expiryDate = membershipDate + validityPeriod MONTHS
+        IF currentDate <= expiryDate THEN
+            RETURN TRUE
+        ELSE
+            RETURN FALSE
+END CLASS
+
+
+PROGRAM LibraryMembershipTracker
+    INPUT memberName
+    INPUT memberID
+    INPUT membershipDate
+    INPUT validityMonths
+
+    CREATE member1 AS Member(memberName, memberID, membershipDate, validityMonths)
+
+    INPUT currentDate
+    IF member1.checkMembershipValidity(currentDate) = TRUE THEN
+        PRINT "Membership is valid."
+    ELSE
+        PRINT "Membership has expired."
+END PROGRAM

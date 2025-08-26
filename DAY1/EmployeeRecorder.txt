@@ -1,0 +1,34 @@
+CLASS Employee
+    ATTRIBUTES:
+        name : STRING
+        department : STRING
+        salary : INTEGER
+
+    CONSTRUCTOR(name, department, salary)
+        SET name = name
+        SET department = department
+        SET salary = salary
+END CLASS
+
+
+CLASS EmployeeRecordApp
+
+    METHOD main()
+      
+        DECLARE employees AS ArrayList<Employee>
+
+     
+        ADD new Employee("Alice", "HR", 50000) TO employees
+        ADD new Employee("Bob", "IT", 60000) TO employees
+        ADD new Employee("Charlie", "HR", 55000) TO employees
+        ADD new Employee("Diana", "IT", 62000) TO employees
+
+        FOR EACH emp IN employees
+            PRINT emp.name + " - " + emp.department + " - " + emp.salary
+
+      
+        PRINT "Employees in HR Department:"
+        FOR EACH emp IN employees
+            IF emp.department = "HR" THEN
+                PRINT emp.name + " - " + emp.salary
+END CLASS

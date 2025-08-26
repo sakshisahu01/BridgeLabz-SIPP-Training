@@ -1,0 +1,37 @@
+CLASS TextEditor
+    ATTRIBUTES:
+        content : STRING
+        undoStack : STACK
+
+    CONSTRUCTOR()
+        SET content = ""
+        CREATE empty undoStack
+
+    METHOD typeText(newText : STRING)
+        PUSH content TO undoStack
+        CONCATENATE newText TO content
+
+    METHOD undo()
+        IF undoStack is NOT EMPTY THEN
+            SET content = POP from undoStack
+        ELSE
+            PRINT "Nothing to undo"
+
+    METHOD displayContent()
+        PRINT "Current Content: " + content
+END CLASS
+
+
+PROGRAM TextEditorApp
+    CREATE editor AS TextEditor
+
+    editor.typeText("Hello")
+    editor.typeText(" World")
+    editor.displayContent()        
+
+    editor.undo()
+    editor.displayContent()       
+
+    editor.undo()
+    editor.displayContent()       
+END PROGRAM

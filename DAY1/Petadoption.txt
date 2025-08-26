@@ -1,0 +1,78 @@
+CLASS Pet
+    ATTRIBUTES:
+        name : STRING
+        breed : STRING
+        age : INTEGER
+        adoptionStatus : STRING
+
+    CONSTRUCTOR(name, breed, age)
+        SET name = name
+        SET breed = breed
+        SET age = age
+        SET adoptionStatus = "Available"
+
+    METHOD displayInfo()
+        PRINT "Name: " + name
+        PRINT "Breed: " + breed
+        PRINT "Age: " + age
+        PRINT "Status: " + adoptionStatus
+END CLASS
+
+
+CLASS Dog EXTENDS Pet
+    ATTRIBUTES:
+        temperament : STRING
+
+    CONSTRUCTOR(name, breed, age, temperament)
+        CALL Pet.CONSTRUCTOR(name, breed, age)
+        SET temperament = temperament
+
+    METHOD displayInfo()
+        CALL Pet.displayInfo()
+        PRINT "Temperament: " + temperament
+END CLASS
+
+
+CLASS Cat EXTENDS Pet
+    ATTRIBUTES:
+        isIndoor : BOOLEAN
+
+    CONSTRUCTOR(name, breed, age, isIndoor)
+        CALL Pet.CONSTRUCTOR(name, breed, age)
+        SET isIndoor = isIndoor
+
+    METHOD displayInfo()
+        CALL Pet.displayInfo()
+        PRINT "Is Indoor: " + isIndoor
+END CLASS
+
+
+CLASS Bird EXTENDS Pet
+    ATTRIBUTES:
+        canTalk : BOOLEAN
+
+    CONSTRUCTOR(name, breed, age, canTalk)
+        CALL Pet.CONSTRUCTOR(name, breed, age)
+        SET canTalk = canTalk
+
+    METHOD displayInfo()
+        CALL Pet.displayInfo()
+        PRINT "Can Talk: " + canTalk
+END CLASS
+
+
+PROGRAM PetAdoptionApp
+    DECLARE availablePets AS LIST
+
+    CREATE myDog AS Dog("Buddy", "Golden Retriever", 3, "Friendly")
+    CREATE myCat AS Cat("Whiskers", "Siamese", 2, TRUE)
+    CREATE myBird AS Bird("Polly", "Parrot", 1, TRUE)
+
+    ADD myDog TO availablePets
+    ADD myCat TO availablePets
+    ADD myBird TO availablePets
+
+    FOR EACH pet IN availablePets
+        CALL pet.displayInfo()
+        PRINT BLANK LINE
+END PROGRAM

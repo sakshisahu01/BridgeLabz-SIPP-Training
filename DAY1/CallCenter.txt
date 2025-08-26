@@ -1,0 +1,59 @@
+CLASS Customer
+    ATTRIBUTES:
+        name : STRING
+        priority : STRING  
+
+    CONSTRUCTOR(name, priority)
+        SET name = name
+        SET priority = priority
+END CLASS
+
+
+CLASS CallCenterQueue
+    ATTRIBUTES:
+        normalQueue : QUEUE
+        emergencyQueue : QUEUE
+
+    CONSTRUCTOR()
+        CREATE empty normalQueue
+        CREATE empty emergencyQueue
+
+    METHOD enqueueCustomer(customer : Customer)
+        IF customer.priority = "Emergency" THEN
+            ENQUEUE customer TO emergencyQueue
+        ELSE
+            ENQUEUE customer TO normalQueue
+
+    METHOD dequeueCustomer() RETURNS Customer
+        IF emergencyQueue is NOT EMPTY THEN
+            RETURN DEQUEUE from emergencyQueue
+        ELSE IF normalQueue is NOT EMPTY THEN
+            RETURN DEQUEUE from normalQueue
+        ELSE
+            PRINT "No customers in queue"
+            RETURN NULL
+
+    METHOD displayQueueStatus()
+        PRINT "Emergency Queue: ", LIST of emergencyQueue
+        PRINT "Normal Queue: ", LIST of normalQueue
+END CLASS
+
+
+PROGRAM CallCenterApp
+    CREATE callCenter AS CallCenterQueue
+
+    CREATE cust1 AS Customer("Alice", "Normal")
+    CREATE cust2 AS Customer("Bob", "Emergency")
+    CREATE cust3 AS Customer("Charlie", "Normal")
+
+    callCenter.enqueueCustomer(cust1)
+    callCenter.enqueueCustomer(cust2)
+    callCenter.enqueueCustomer(cust3)
+
+    callCenter.displayQueueStatus()
+
+    DEQUEUE customer1 = callCenter.dequeueCustomer()   
+    PRINT "Serving Customer: " + customer1.name
+
+    callCenter.displayQueueStatus()
+END PROGRAM

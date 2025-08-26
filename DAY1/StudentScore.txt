@@ -1,0 +1,26 @@
+CLASS StudentScoreApp
+
+    METHOD main()
+     
+        DECLARE studentScores AS HashMap<String, Integer>
+
+     
+        studentScores.put("Alice", 85)
+        studentScores.put("Bob", 92)
+        studentScores.put("Charlie", 78)
+        studentScores.put("Diana", 95)
+
+  
+        FOR EACH entry IN studentScores
+            PRINT entry.key + " : " + entry.value
+
+       
+        SET highestScore = -1
+        SET topStudent = ""
+        FOR EACH entry IN studentScores
+            IF entry.value > highestScore THEN
+                highestScore = entry.value
+                topStudent = entry.key
+
+        PRINT "Highest Scorer: " + topStudent + " with marks " + highestScore
+END CLASS
