@@ -1,0 +1,167 @@
+// Online Exam Portal (Basic)
+
+// Problem Description:
+// Build an online examination portal with two main user types: Students and Admins.
+// Students can log in to take exams, view results, and track progress.
+// Admins can log in to create exams, manage questions, and review student performance.
+// The system should use inheritance, method overriding, and polymorphism to handle user authentication.
+
+// Learning Points:
+// - Fundamental OOPs concepts: Inheritance, Method Overriding, Polymorphism.
+// - Designing a role-based authentication system.
+// - Real-world application of OOPs for user management in platforms like LMS.
+
+// ----------------------------------------------------------------------------------------------------
+
+// 1. User Class (Base Class)
+// Represents a generic user of the online exam portal.
+CLASS User:
+    username: STRING
+    password: STRING
+
+    // Constructor
+    CONSTRUCTOR User(username: STRING, password: STRING):
+        THIS.username = username
+        THIS.password = password
+
+    // Method to simulate user login.
+    // This method will be overridden by subclasses.
+    // PARAMETER enteredPassword: The password entered by the user.
+    // RETURNS: BOOLEAN indicating if login was successful.
+    METHOD login(enteredPassword: STRING) RETURNS BOOLEAN:
+        IF THIS.password == enteredPassword:
+            PRINT "User " + THIS.username + " logged in successfully."
+            RETURN TRUE
+        ELSE:
+            PRINT "Login failed for user " + THIS.username + ": Incorrect password."
+            RETURN FALSE
+
+    // Getter for username
+    METHOD getUsername() RETURNS STRING:
+        RETURN THIS.username
+
+// ----------------------------------------------------------------------------------------------------
+
+// 2. Student Class (Subclass of User)
+// Represents a student user with specific login logic.
+CLASS Student EXTENDS User:
+    studentId: STRING
+    isRegistered: BOOLEAN
+    isEnrolledInCourse: BOOLEAN
+
+    // Constructor
+    CONSTRUCTOR Student(username: STRING, password: STRING, studentId: STRING, isRegistered: BOOLEAN, isEnrolledInCourse: BOOLEAN):
+        SUPER(username, password)
+        THIS.studentId = studentId
+        THIS.isRegistered = isRegistered
+        THIS.isEnrolledInCourse = isEnrolledInCourse
+
+    // Overrides the login method for student-specific authentication.
+    // Checks registration and course enrollment status.
+    METHOD login(enteredPassword: STRING) RETURNS BOOLEAN:
+        IF SUPER.login(enteredPassword): // Call base class login first
+            IF THIS.isRegistered AND THIS.isEnrolledInCourse:
+                PRINT "Student " + THIS.username + " granted access to exams."
+                RETURN TRUE
+            ELSE:
+                PRINT "Student " + THIS.username + " login successful, but access denied: Not registered or not enrolled in a course."
+                RETURN FALSE
+        ELSE:
+            RETURN FALSE // Base class login failed
+
+    // Method to simulate taking an exam
+    METHOD takeExam(examName: STRING):
+        PRINT "Student " + THIS.username + " is taking exam: " + examName
+
+    // Method to view results
+    METHOD viewResults():
+        PRINT "Student " + THIS.username + " is viewing their exam results."
+
+// ----------------------------------------------------------------------------------------------------
+
+// 3. Admin Class (Subclass of User)
+// Represents an admin user with specific login logic and privileges.
+CLASS Admin EXTENDS User:
+    adminId: STRING
+    hasAdminPrivileges: BOOLEAN
+
+    // Constructor
+    CONSTRUCTOR Admin(username: STRING, password: STRING, adminId: STRING, hasAdminPrivileges: BOOLEAN):
+        SUPER(username, password)
+        THIS.adminId = adminId
+        THIS.hasAdminPrivileges = hasAdminPrivileges
+
+    // Overrides the login method for admin-specific authentication.
+    // Checks admin privileges.
+    METHOD login(enteredPassword: STRING) RETURNS BOOLEAN:
+        IF SUPER.login(enteredPassword): // Call base class login first
+            IF THIS.hasAdminPrivileges:
+                PRINT "Admin " + THIS.username + " granted access to exam management tools."
+                RETURN TRUE
+            ELSE:
+                PRINT "Admin " + THIS.username + " login successful, but access denied: No admin privileges."
+                RETURN FALSE
+        ELSE:
+            RETURN FALSE // Base class login failed
+
+    // Method to create an exam
+    METHOD createExam(examName: STRING):
+        PRINT "Admin " + THIS.username + " is creating exam: " + examName
+
+    // Method to manage questions
+    METHOD manageQuestions():
+        PRINT "Admin " + THIS.username + " is managing exam questions."
+
+    // Method to review student performance
+    METHOD reviewStudentPerformance(studentName: STRING):
+        PRINT "Admin " + THIS.username + " is reviewing performance for student: " + studentName
+
+// ----------------------------------------------------------------------------------------------------
+
+// 4. Main Program (Example Usage)
+PROGRAM Main:
+    // Create a student instance
+    student1 = NEW Student("john123", "studentpass", "S001", TRUE, TRUE)
+    student2 = NEW Student("jane456", "janepass", "S002", TRUE, FALSE) // Not enrolled
+    student3 = NEW Student("peter789", "peterpass", "S003", FALSE, TRUE) // Not registered
+
+    // Create an admin instance
+    admin1 = NEW Admin("admin_user", "adminpass", "A001", TRUE)
+    admin2 = NEW Admin("guest_admin", "guestpass", "A002", FALSE) // No privileges
+
+    PRINT "\n--- Student Login Scenarios ---"
+    // Scenario 1: Successful student login
+    PRINT "Attempting login for john123 (registered, enrolled):"
+    IF student1.login("studentpass"):
+        student1.takeExam("Mathematics Final")
+        student1.viewResults()
+
+    // Scenario 2: Student login, but not enrolled
+    PRINT "\nAttempting login for jane456 (registered, not enrolled):"
+    jane456.login("janepass")
+
+    // Scenario 3: Student login, but not registered
+    PRINT "\nAttempting login for peter789 (not registered, enrolled):"
+    peter789.login("peterpass")
+
+    // Scenario 4: Student login with incorrect password
+    PRINT "\nAttempting login for john123 (incorrect password):"
+    john123.login("wrongpass")
+
+    PRINT "\n--- Admin Login Scenarios ---"
+    // Scenario 1: Successful admin login
+    PRINT "Attempting login for admin_user (with privileges):"
+    IF admin1.login("adminpass"):
+        admin1.createExam("Physics Midterm")
+        admin1.manageQuestions()
+        admin1.reviewStudentPerformance("john123")
+
+    // Scenario 2: Admin login, but no privileges
+    PRINT "\nAttempting login for guest_admin (no privileges):"
+    guest_admin.login("guestpass")
+
+    // Scenario 3: Admin login with incorrect password
+    PRINT "\nAttempting login for admin_user (incorrect password):"
+    admin1.login("wrongadminpass")
+
+END PROGRAM

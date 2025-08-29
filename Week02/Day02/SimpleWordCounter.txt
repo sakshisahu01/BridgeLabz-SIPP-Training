@@ -1,0 +1,77 @@
+// Pseudo-code for Simple Word Counter
+
+// Function to count word frequencies in a given text
+function countWordFrequencies(text):
+    // 1. Normalize text: convert to lowercase and remove punctuation
+    normalizedText = toLowerCase(text)
+    normalizedText = replaceAll(normalizedText, "[^a-z\s]", "") // Remove non-alphabetic characters except spaces
+
+    // 2. Split text into words
+    words = split(normalizedText, " ") // Split by space
+
+    // 3. Use a Map to store word counts
+    wordCounts = new Map<String, Integer>()
+
+    // 4. Iterate through words and count occurrences
+    for each word in words:
+        if word is not empty:
+            if wordCounts.containsKey(word):
+                wordCounts.put(word, wordCounts.get(word) + 1)
+            else:
+                wordCounts.put(word, 1)
+
+    return wordCounts
+
+// Function to find the most frequent word
+function findMostFrequentWord(wordCounts):
+    mostFrequentWord = ""
+    maxCount = 0
+
+    for each entry in wordCounts:
+        word = entry.key
+        count = entry.value
+        if count > maxCount:
+            maxCount = count
+            mostFrequentWord = word
+
+    return mostFrequentWord + " -> " + maxCount
+
+// Function to find rarely used words (e.g., count of 1)
+function findRarelyUsedWords(wordCounts):
+    rareWords = new List<String>()
+    for each entry in wordCounts:
+        word = entry.key
+        count = entry.value
+        if count == 1:
+            rareWords.add(word)
+    return rareWords
+
+// Example Run:
+// articleSnippet = "Sports bring people together. Sports inspire teamwork. Sports create leaders."
+
+// wordFrequencies = countWordFrequencies(articleSnippet)
+
+// Print all word frequencies:
+// for each entry in wordFrequencies:
+//     print entry.key + " -> " + entry.value
+// Expected Output:
+// sports -> 3
+// bring -> 1
+// people -> 1
+// together -> 1
+// inspire -> 1
+// teamwork -> 1
+// create -> 1
+// leaders -> 1
+
+// How many times "Sports" was mentioned?
+// print "'Sports' mentioned: " + wordFrequencies.get("sports")
+// Expected: 'Sports' mentioned: 3
+
+// Which word is most frequent?
+// print "Most frequent word: " + findMostFrequentWord(wordFrequencies)
+// Expected: Most frequent word: sports -> 3
+
+// Which words are rarely used?
+// print "Rarely used words: " + findRarelyUsedWords(wordFrequencies)
+// Expected: Rarely used words: [bring, people, together, inspire, teamwork, create, leaders]

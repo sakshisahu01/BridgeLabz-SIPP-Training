@@ -1,0 +1,174 @@
+// Bus Route Navigator
+
+// Problem Description:
+// Digitize bus route management using a LinkedList. Each bus stop is a node.
+// The system needs to handle frequent route changes: adding, removing, and rearranging stops.
+// It should support insertion, deletion, and search operations on the bus route.
+
+// Learning Points:
+// - LinkedList: Understanding its structure and advantages for dynamic data.
+// - Insertion: Adding elements at various positions efficiently.
+// - Deletion: Removing elements efficiently.
+// - Search: Finding specific elements within the list.
+// - Real-world application of LinkedList for dynamic route management.
+
+// ----------------------------------------------------------------------------------------------------
+
+// 1. BusStop Node Class
+// Represents a single bus stop in the route.
+CLASS BusStop:
+    name: STRING
+    next: BusStop // Reference to the next bus stop in the route
+
+    // Constructor
+    CONSTRUCTOR BusStop(name: STRING):
+        THIS.name = name
+        THIS.next = NULL
+
+    // Getters
+    METHOD getName() RETURNS STRING:
+        RETURN THIS.name
+
+    METHOD getNext() RETURNS BusStop:
+        RETURN THIS.next
+
+    // Setter for next node
+    METHOD setNext(nextStop: BusStop):
+        THIS.next = nextStop
+
+// ----------------------------------------------------------------------------------------------------
+
+// 2. BusRouteNavigator Class
+// Manages the bus route using a LinkedList of BusStop nodes.
+CLASS BusRouteNavigator:
+    head: BusStop // Head of the LinkedList, representing the start of the route
+
+    // Constructor
+    CONSTRUCTOR BusRouteNavigator():
+        THIS.head = NULL
+
+    // Method to add a bus stop to the end of the route.
+    METHOD addStop(stopName: STRING):
+        newNode = NEW BusStop(stopName)
+        IF head IS NULL:
+            head = newNode
+        ELSE:
+            current = head
+            WHILE current.next IS NOT NULL:
+                current = current.next
+            current.next = newNode
+        PRINT "Added bus stop: " + stopName
+
+    // Method to insert a bus stop after a specified existing stop.
+    // RETURNS: BOOLEAN indicating if insertion was successful.
+    METHOD insertStopAfter(existingStopName: STRING, newStopName: STRING) RETURNS BOOLEAN:
+        IF head IS NULL:
+            PRINT "Route is empty. Cannot insert after " + existingStopName + "."
+            RETURN FALSE
+
+        current = head
+        WHILE current IS NOT NULL AND current.name != existingStopName:
+            current = current.next
+
+        IF current IS NOT NULL:
+            newNode = NEW BusStop(newStopName)
+            newNode.next = current.next
+            current.next = newNode
+            PRINT "Inserted bus stop: " + newStopName + " after " + existingStopName
+            RETURN TRUE
+        ELSE:
+            PRINT "Existing stop '" + existingStopName + "' not found in the route. Cannot insert."
+            RETURN FALSE
+
+    // Method to delete a bus stop from the route.
+    // RETURNS: BOOLEAN indicating if deletion was successful.
+    METHOD deleteStop(stopName: STRING) RETURNS BOOLEAN:
+        IF head IS NULL:
+            PRINT "Route is empty. Cannot delete " + stopName + "."
+            RETURN FALSE
+
+        // If head itself holds the stop to be deleted
+        IF head.name == stopName:
+            head = head.next
+            PRINT "Deleted bus stop: " + stopName
+            RETURN TRUE
+
+        current = head
+        WHILE current.next IS NOT NULL AND current.next.name != stopName:
+            current = current.next
+
+        IF current.next IS NOT NULL:
+            current.next = current.next.next
+            PRINT "Deleted bus stop: " + stopName
+            RETURN TRUE
+        ELSE:
+            PRINT "Bus stop '" + stopName + "' not found in the route. Cannot delete."
+            RETURN FALSE
+
+    // Method to search for a bus stop in the route.
+    // RETURNS: BOOLEAN indicating if the stop is found.
+    METHOD searchStop(stopName: STRING) RETURNS BOOLEAN:
+        current = head
+        WHILE current IS NOT NULL:
+            IF current.name == stopName:
+                PRINT "Bus stop '" + stopName + "' found in the route."
+                RETURN TRUE
+            current = current.next
+        PRINT "Bus stop '" + stopName + "' not found in the route."
+        RETURN FALSE
+
+    // Method to display the current bus route.
+    METHOD displayRoute():
+        IF head IS NULL:
+            PRINT "Bus route is empty."
+            RETURN
+
+        routeString = "Current Bus Route: "
+        current = head
+        WHILE current IS NOT NULL:
+            routeString = routeString + current.name
+            IF current.next IS NOT NULL:
+                routeString = routeString + " → "
+            current = current.next
+        PRINT routeString
+
+// ----------------------------------------------------------------------------------------------------
+
+// 3. Main Program (Example Usage)
+PROGRAM Main:
+    navigator = NEW BusRouteNavigator()
+
+    // Initial route setup
+    navigator.addStop("Depot")
+    navigator.addStop("Main Street")
+    navigator.addStop("City Mall")
+    navigator.addStop("Hospital")
+    navigator.addStop("Airport")
+    navigator.displayRoute()
+
+    // Scenario: City adds University Stop after City Mall.
+    navigator.insertStopAfter("City Mall", "University Stop")
+    navigator.displayRoute()
+
+    // Scenario: Later, removes the Hospital due to road closure.
+    navigator.deleteStop("Hospital")
+    navigator.displayRoute()
+
+    // Scenario: Passenger searches for Airport, system confirms it’s still in the route.
+    navigator.searchStop("Airport")
+
+    // Additional scenarios
+    navigator.searchStop("Museum") // Should not be found
+    navigator.deleteStop("Depot") // Delete head
+    navigator.displayRoute()
+    navigator.deleteStop("Airport") // Delete tail
+    navigator.displayRoute()
+    navigator.deleteStop("Main Street")
+    navigator.displayRoute()
+    navigator.deleteStop("City Mall")
+    navigator.displayRoute()
+    navigator.deleteStop("University Stop")
+    navigator.displayRoute()
+    navigator.deleteStop("NonExistentStop") // Try to delete a non-existent stop
+
+END PROGRAM

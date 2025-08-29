@@ -1,0 +1,98 @@
+// Pseudo-code for Attendance Marker
+
+// Constants
+NUM_STUDENTS = 30
+NUM_DAYS = 30
+ATTENDANCE_THRESHOLD_PERCENTAGE = 75
+
+// Data Representation: 2D Array
+// attendance[studentIndex][dayIndex]
+// 1 for Present, 0 for Absent
+attendance: 2D Array of integers [NUM_STUDENTS][NUM_DAYS]
+
+// Function to initialize attendance array (all absent by default)
+function initializeAttendance():
+    for studentIndex from 0 to NUM_STUDENTS - 1:
+        for dayIndex from 0 to NUM_DAYS - 1:
+            attendance[studentIndex][dayIndex] = 0
+
+// Operation: Mark attendance
+function markAttendance(studentIndex, dayIndex, status):
+    // status: 1 for Present, 0 for Absent
+    if studentIndex >= 0 and studentIndex < NUM_STUDENTS and \
+       dayIndex >= 0 and dayIndex < NUM_DAYS:
+        attendance[studentIndex][dayIndex] = status
+        print "Attendance marked for Student " + (studentIndex + 1) + " on Day " + (dayIndex + 1) + ": " + (status == 1 ? "Present" : "Absent")
+    else:
+        print "Invalid student or day index."
+
+// Operation: Daily summary
+function getDailySummary(dayIndex):
+    presentCount = 0
+    if dayIndex >= 0 and dayIndex < NUM_DAYS:
+        for studentIndex from 0 to NUM_STUDENTS - 1:
+            if attendance[studentIndex][dayIndex] == 1:
+                presentCount = presentCount + 1
+        print "On Day " + (dayIndex + 1) + ", " + presentCount + " students were present."
+        return presentCount
+    else:
+        print "Invalid day index."
+        return -1
+
+// Operation: Monthly summary for a student
+function getStudentMonthlySummary(studentIndex):
+    presentDays = 0
+    if studentIndex >= 0 and studentIndex < NUM_STUDENTS:
+        for dayIndex from 0 to NUM_DAYS - 1:
+            if attendance[studentIndex][dayIndex] == 1:
+                presentDays = presentDays + 1
+        print "Student " + (studentIndex + 1) + " attended " + presentDays + " days this month."
+        return presentDays
+    else:
+        print "Invalid student index."
+        return -1
+
+// Operation: Defaulter list (students with < 75% attendance)
+function getDefaulterList():
+    print "Students with less than " + ATTENDANCE_THRESHOLD_PERCENTAGE + "% attendance:"
+    defaulterCount = 0
+    for studentIndex from 0 to NUM_STUDENTS - 1:
+        presentDays = getStudentMonthlySummary(studentIndex) // Re-use function to get present days
+        if presentDays != -1:
+            attendancePercentage = (presentDays / NUM_DAYS) * 100
+            if attendancePercentage < ATTENDANCE_THRESHOLD_PERCENTAGE:
+                print "- Student " + (studentIndex + 1) + " (Attendance: " + attendancePercentage + "%)"
+                defaulterCount = defaulterCount + 1
+    if defaulterCount == 0:
+        print "None."
+
+// Example Run:
+// initializeAttendance()
+
+// Teacher marks attendance for Day 1
+// markAttendance(0, 0, 1) // Student 1, Day 1: Present
+// markAttendance(2, 0, 0) // Student 3, Day 1: Absent
+
+// Simulate some attendance data for 5 students over 5 days for demonstration
+// (Assuming NUM_STUDENTS = 5, NUM_DAYS = 5 for this example)
+// attendance = [
+//     [1, 0, 1, 1, 1], // Student 1
+//     [1, 1, 1, 0, 1], // Student 2
+//     [0, 0, 1, 1, 1], // Student 3
+//     [1, 1, 1, 1, 1], // Student 4
+//     [1, 0, 0, 1, 0]  // Student 5
+// ]
+
+// By Day 15 (assuming Day 10 in a 5-day example), teacher wants to check:
+// "How many students came on Day 10?" (Day 4 in 0-indexed 5-day example)
+// getDailySummary(3) // For Day 4 (index 3)
+
+// "Did Student 5 attend more than 20 days?" (Student 5, index 4 in 5-day example)
+// presentDaysStudent5 = getStudentMonthlySummary(4)
+// if presentDaysStudent5 > 20:
+//     print "Student 5 attended more than 20 days."
+// else:
+//     print "Student 5 did not attend more than 20 days."
+
+// "Which students have attendance < 22 days?" (Assuming 75% of 30 days = 22.5 days)
+// getDefaulterList()

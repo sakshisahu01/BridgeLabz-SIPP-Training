@@ -1,0 +1,111 @@
+
+// 1. AttendanceTracker Class
+// Manages attendance records using a 2D array.
+CLASS AttendanceTracker:
+    attendanceRecords: ARRAY[INTEGER][INTEGER] OF CHARACTER // 2D array to store 'P' or 'A'
+    numStudents: INTEGER
+    numDays: INTEGER
+
+    // Constructor
+    CONSTRUCTOR AttendanceTracker(numStudents: INTEGER, numDays: INTEGER):
+        THIS.numStudents = numStudents
+        THIS.numDays = numDays
+        attendanceRecords = NEW ARRAY[numStudents][numDays] OF CHARACTER
+        // Initialize all attendance to 'A' (Absent) by default
+        FOR studentIndex FROM 0 TO numStudents - 1:
+            FOR dayIndex FROM 0 TO numDays - 1:
+                attendanceRecords[studentIndex][dayIndex] = 'A'
+
+    // Method to mark attendance for a specific student on a specific day.
+    // studentId: 0-indexed student ID
+    // day: 1-indexed day of the month
+    // status: 'P' for Present, 'A' for Absent
+    METHOD markAttendance(studentId: INTEGER, day: INTEGER, status: CHARACTER):
+        IF studentId >= 0 AND studentId < numStudents AND day >= 1 AND day <= numDays:
+            attendanceRecords[studentId][day - 1] = status // Adjust day to 0-indexed array position
+            PRINT "Attendance marked for Student " + (studentId + 1) + " on Day " + day + ": " + status
+        ELSE:
+            PRINT "Invalid student ID or day."
+
+    // Method to update attendance for a specific student on a specific day.
+    // studentId: 0-indexed student ID
+    // day: 1-indexed day of the month
+    // newStatus: 'P' for Present, 'A' for Absent
+    METHOD updateAttendance(studentId: INTEGER, day: INTEGER, newStatus: CHARACTER):
+        IF studentId >= 0 AND studentId < numStudents AND day >= 1 AND day <= numDays:
+            oldStatus = attendanceRecords[studentId][day - 1]
+            attendanceRecords[studentId][day - 1] = newStatus
+            PRINT "Attendance updated for Student " + (studentId + 1) + " on Day " + day + ": From " + oldStatus + " to " + newStatus
+        ELSE:
+            PRINT "Invalid student ID or day for update."
+
+    // Method to generate a monthly attendance report for all students.
+    METHOD generateMonthlyReport():
+        PRINT "\n--- Monthly Attendance Report ---"
+        FOR studentIndex FROM 0 TO numStudents - 1:
+            presentDays = 0
+            reportString = "Student " + (studentIndex + 1) + ": "
+            FOR dayIndex FROM 0 TO numDays - 1:
+                status = attendanceRecords[studentIndex][dayIndex]
+                reportString = reportString + status + " "
+                IF status == 'P':
+                    presentDays = presentDays + 1
+            reportString = reportString + " (Present: " + presentDays + " days)"
+            PRINT reportString
+
+    // Method to get attendance for a specific student on a specific day.
+    METHOD getAttendance(studentId: INTEGER, day: INTEGER) RETURNS CHARACTER:
+        IF studentId >= 0 AND studentId < numStudents AND day >= 1 AND day <= numDays:
+            RETURN attendanceRecords[studentId][day - 1]
+        ELSE:
+            PRINT "Invalid student ID or day for retrieval."
+            RETURN ' '
+
+// ----------------------------------------------------------------------------------------------------
+
+// 2. Main Program (Example Usage)
+PROGRAM Main:
+    // Assume 3 students and a month with 30 days
+    tracker = NEW AttendanceTracker(3, 30)
+
+    // Scenario 1: Mark attendance daily for Student 1 for the first week
+    PRINT "\nMarking attendance for Student 1 (first week):"
+    tracker.markAttendance(0, 1, 'P') // Student 1, Day 1: Present
+    tracker.markAttendance(0, 2, 'P') // Student 1, Day 2: Present
+    tracker.markAttendance(0, 3, 'A') // Student 1, Day 3: Absent
+    tracker.markAttendance(0, 4, 'P') // Student 1, Day 4: Present
+    tracker.markAttendance(0, 5, 'P') // Student 1, Day 5: Present
+    tracker.markAttendance(0, 6, 'P') // Student 1, Day 6: Present
+    tracker.markAttendance(0, 7, 'A') // Student 1, Day 7: Absent
+
+    // Mark some attendance for other students
+    tracker.markAttendance(1, 1, 'P')
+    tracker.markAttendance(1, 2, 'P')
+    tracker.markAttendance(2, 1, 'A')
+
+    // Generate initial report
+    tracker.generateMonthlyReport()
+
+    // Scenario 2: Teacher updates day 3 from A to P for Student 1
+    PRINT "\nUpdating attendance for Student 1, Day 3:"
+    tracker.updateAttendance(0, 3, 'P')
+
+    // Generate report after update
+    tracker.generateMonthlyReport()
+
+    // Mark more attendance for Student 1 to reach 26 days present
+    PRINT "\nMarking more attendance for Student 1:"
+    FOR day FROM 8 TO 30:
+        IF day == 10 OR day == 20 OR day == 25: // Make some days absent for variety
+            tracker.markAttendance(0, day, 'A')
+        ELSE:
+            tracker.markAttendance(0, day, 'P')
+
+    // Final report for Student 1 (should be 26 days present if 4 days were absent)
+    tracker.generateMonthlyReport()
+
+    // Test invalid input
+    tracker.markAttendance(5, 1, 'P') // Invalid student ID
+    tracker.updateAttendance(0, 35, 'P') // Invalid day
+
+END PROGRAM

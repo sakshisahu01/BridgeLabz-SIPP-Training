@@ -1,0 +1,92 @@
+// Pseudo-code for Parking Lot Ticketing System
+
+// Superclass: Vehicle
+class Vehicle:
+    attributes:
+        vehicleNumber: string
+        entryTime: DateTime
+
+    methods:
+        // This method will be overridden by subclasses
+        calculateFee(exitTime):
+            // Base calculation logic (can be empty or throw error if not overridden)
+            return 0
+
+// Subclass: Car
+class Car inherits Vehicle:
+    constants:
+        BASE_FEE: 50
+        HOURLY_RATE: 30
+
+    methods:
+        calculateFee(exitTime):
+            durationHours = ceil( (exitTime - this.entryTime).totalHours )
+            if durationHours <= 1:
+                return BASE_FEE
+            else:
+                return BASE_FEE + ( (durationHours - 1) * HOURLY_RATE )
+
+// Subclass: Bike
+class Bike inherits Vehicle:
+    constants:
+        BASE_FEE: 20
+        HOURLY_RATE: 10
+
+    methods:
+        calculateFee(exitTime):
+            durationHours = ceil( (exitTime - this.entryTime).totalHours )
+            if durationHours <= 1:
+                return BASE_FEE
+            else:
+                return BASE_FEE + ( (durationHours - 1) * HOURLY_RATE )
+
+// Subclass: Truck
+class Truck inherits Vehicle:
+    constants:
+        BASE_FEE: 100
+        HOURLY_RATE: 50
+
+    methods:
+        calculateFee(exitTime):
+            durationHours = ceil( (exitTime - this.entryTime).totalHours )
+            if durationHours <= 1:
+                return BASE_FEE
+            else:
+                return BASE_FEE + ( (durationHours - 1) * HOURLY_RATE )
+
+// How It Works:
+// When a vehicle enters:
+// parkingTickets = new Dictionary<string, Vehicle> // To store active tickets
+// car1 = new Car()
+// car1.vehicleNumber = "KA05AB1234"
+// car1.entryTime = "2024-01-01 10:00:00" // Example DateTime
+// parkingTickets.add(car1.vehicleNumber, car1)
+
+// bike1 = new Bike()
+// bike1.vehicleNumber = "KA05XY7890"
+// bike1.entryTime = "2024-01-01 11:15:00"
+// parkingTickets.add(bike1.vehicleNumber, bike1)
+
+// truck1 = new Truck()
+// truck1.vehicleNumber = "KA09TR5566"
+// truck1.entryTime = "2024-01-01 09:30:00"
+// parkingTickets.add(truck1.vehicleNumber, truck1)
+
+// When a vehicle exits:
+// exitTimeCar = "2024-01-01 13:30:00"
+// carTicket = parkingTickets.get("KA05AB1234")
+// carFee = carTicket.calculateFee(exitTimeCar)
+// print "Vehicle: " + carTicket.vehicleNumber + ", Type: Car, Entry: " + carTicket.entryTime + ", Exit: " + exitTimeCar + ", Fee: " + carFee
+// Expected: Fee = ₹125
+
+// exitTimeBike = "2024-01-01 12:00:00"
+// bikeTicket = parkingTickets.get("KA05XY7890")
+// bikeFee = bikeTicket.calculateFee(exitTimeBike)
+// print "Vehicle: " + bikeTicket.vehicleNumber + ", Type: Bike, Entry: " + bikeTicket.entryTime + ", Exit: " + exitTimeBike + ", Fee: " + bikeFee
+// Expected: Fee = ₹30
+
+// exitTimeTruck = "2024-01-01 14:00:00"
+// truckTicket = parkingTickets.get("KA09TR5566")
+// truckFee = truckTicket.calculateFee(exitTimeTruck)
+// print "Vehicle: " + truckTicket.vehicleNumber + ", Type: Truck, Entry: " + truckTicket.entryTime + ", Exit: " + exitTimeTruck + ", Fee: " + truckFee
+// Expected: Fee = ₹325

@@ -1,0 +1,90 @@
+// Pseudo-code for Online Exam Portal (Basic)
+
+// Base class for all users
+class User:
+    attributes:
+        username: string
+        password: string
+
+    methods:
+        login(username, password):
+            // Common login logic
+            if username and password match stored credentials:
+                return true
+            else:
+                return false
+
+// Subclass for Students
+class Student inherits User:
+    attributes:
+        studentId: string
+        enrolledCourses: list of Course
+
+    methods:
+        login(username, password):
+            // Override login for student-specific validation
+            if super.login(username, password):
+                if student is registered and enrolled in a course:
+                    print "Student login successful. Accessing exams."
+                    return true
+                else:
+                    print "Student not registered or not enrolled in any course."
+                    return false
+            else:
+                print "Invalid student credentials."
+                return false
+
+        viewResults():
+            // Logic to view student's exam results
+            print "Displaying student results."
+
+        trackProgress():
+            // Logic to track student's progress
+            print "Displaying student progress."
+
+// Subclass for Admin
+class Admin inherits User:
+    attributes:
+        adminId: string
+        privileges: list of string
+
+    methods:
+        login(username, password):
+            // Override login for admin-specific validation
+            if super.login(username, password):
+                if admin credentials are valid and have admin privileges:
+                    print "Admin login successful. Accessing exam management tools."
+                    return true
+                else:
+                    print "Admin does not have sufficient privileges."
+                    return false
+            else:
+                print "Invalid admin credentials."
+                return false
+
+        createExam():
+            // Logic to create a new exam
+            print "Creating new exam."
+
+        manageQuestions():
+            // Logic to manage exam questions
+            print "Managing exam questions."
+
+        reviewStudentPerformance():
+            // Logic to review student performance
+            print "Reviewing student performance."
+
+// Example Run:
+// Scenario 1: Student Login
+// studentUser = new Student()
+// studentUser.username = "john123"
+// studentUser.password = "pass123"
+// studentUser.login("john123", "pass123")
+// Expected Output: Student login successful. Accessing exams. (if registered and enrolled)
+
+// Scenario 2: Admin Login
+// adminUser = new Admin()
+// adminUser.username = "admin001"
+// adminUser.password = "adminpass"
+// adminUser.login("admin001", "adminpass")
+// Expected Output: Admin login successful. Accessing exam management tools. (if valid and privileged)

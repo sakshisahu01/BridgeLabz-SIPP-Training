@@ -1,0 +1,99 @@
+// Pseudo-code for Online Survey Report Generator
+
+// Class to represent a survey response
+class SurveyResponse:
+    attributes:
+        restaurantName: string
+        rating: integer // (1 to 5)
+
+    methods:
+        constructor(name, score):
+            this.restaurantName = name
+            this.rating = score
+
+        getRestaurantName():
+            return this.restaurantName
+
+        getRating():
+            return this.rating
+
+// Function to generate survey report
+function generateSurveyReport(surveyResponses):
+    // Use a Map to store aggregated data: Restaurant Name -> List of Ratings
+    groupedRatings = new Map<String, List<Integer>>()
+
+    for each response in surveyResponses:
+        restaurant = response.getRestaurantName()
+        rating = response.getRating()
+        if not groupedRatings.containsKey(restaurant):
+            groupedRatings.put(restaurant, new List<Integer>())
+        groupedRatings.get(restaurant).add(rating)
+
+    // Calculate average rating for each restaurant
+    averageRatings = new Map<String, Double>()
+    for each entry in groupedRatings:
+        restaurant = entry.key
+        ratingsList = entry.value
+        totalRating = 0
+        for each rating in ratingsList:
+            totalRating = totalRating + rating
+        average = totalRating / ratingsList.size()
+        averageRatings.put(restaurant, average)
+
+    return averageRatings
+
+// Function to find restaurant with highest satisfaction
+function findHighestSatisfaction(averageRatings):
+    highestRestaurant = ""
+    highestRating = 0.0
+
+    for each entry in averageRatings:
+        restaurant = entry.key
+        rating = entry.value
+        if rating > highestRating:
+            highestRating = rating
+            highestRestaurant = restaurant
+
+    return highestRestaurant + " -> " + highestRating
+
+// Function to find restaurant that needs improvement (lowest satisfaction)
+function findNeedsImprovement(averageRatings):
+    lowestRestaurant = ""
+    lowestRating = 5.1 // Initialize with a value higher than max possible rating
+
+    for each entry in averageRatings:
+        restaurant = entry.key
+        rating = entry.value
+        if rating < lowestRating:
+            lowestRating = rating
+            lowestRestaurant = restaurant
+
+    return lowestRestaurant + " -> " + lowestRating
+
+// Example Run:
+// surveyResponses = new List<SurveyResponse>()
+// surveyResponses.add(new SurveyResponse("PizzaHut", 4))
+// surveyResponses.add(new SurveyResponse("PizzaHut", 5))
+// surveyResponses.add(new SurveyResponse("KFC", 3))
+// surveyResponses.add(new SurveyResponse("KFC", 4))
+// surveyResponses.add(new SurveyResponse("Subway", 5))
+// surveyResponses.add(new SurveyResponse("Subway", 4))
+// surveyResponses.add(new SurveyResponse("Subway", 5))
+
+// averageRatingsReport = generateSurveyReport(surveyResponses)
+
+// Print average ratings:
+// for each entry in averageRatingsReport:
+//     print entry.key + " -> " + entry.value
+// Expected Output:
+// PizzaHut -> 4.5
+// KFC -> 3.5
+// Subway -> 4.666...
+
+// Which restaurant has the highest customer satisfaction?
+// print "Highest satisfaction: " + findHighestSatisfaction(averageRatingsReport)
+// Expected: Highest satisfaction: Subway -> 4.666...
+
+// Which one needs improvement?
+// print "Needs improvement: " + findNeedsImprovement(averageRatingsReport)
+// Expected: Needs improvement: KFC -> 3.5

@@ -1,0 +1,120 @@
+// Pseudo-code for Bus Route Navigator
+
+// Node structure for the LinkedList representing a bus stop
+class BusStopNode:
+    attributes:
+        stopName: string
+        nextStop: BusStopNode // Reference to the next stop in the route
+
+    methods:
+        constructor(name):
+            this.stopName = name
+            this.nextStop = null
+
+// LinkedList to manage the bus route
+class BusRouteLinkedList:
+    attributes:
+        head: BusStopNode // The first stop in the route
+
+    methods:
+        constructor():
+            this.head = null
+
+        // Insertion: Add a new bus stop
+        // Can add at the end, or at a specific position
+        addStop(newStopName, afterStopName = null):
+            newNode = new BusStopNode(newStopName)
+            if this.head is null:
+                this.head = newNode
+                print "Added " + newStopName + " as the first stop."
+                return
+
+            if afterStopName is null: // Add to the end
+                current = this.head
+                while current.nextStop is not null:
+                    current = current.nextStop
+                current.nextStop = newNode
+                print "Added " + newStopName + " to the end of the route."
+            else: // Add after a specific stop
+                current = this.head
+                while current is not null and current.stopName is not afterStopName:
+                    current = current.nextStop
+                if current is not null:
+                    newNode.nextStop = current.nextStop
+                    current.nextStop = newNode
+                    print "Added " + newStopName + " after " + afterStopName + "."
+                else:
+                    print "Stop " + afterStopName + " not found. Cannot add " + newStopName + "."
+
+        // Deletion: Remove a bus stop
+        removeStop(stopName):
+            if this.head is null:
+                print "Route is empty. Cannot remove."
+                return
+
+            if this.head.stopName is stopName:
+                this.head = this.head.nextStop
+                print "Removed " + stopName + " from the beginning of the route."
+                return
+
+            current = this.head
+            while current.nextStop is not null and current.nextStop.stopName is not stopName:
+                current = current.nextStop
+
+            if current.nextStop is not null: // Found the stop to remove
+                current.nextStop = current.nextStop.nextStop
+                print "Removed " + stopName + " from the route."
+            else:
+                print "Stop " + stopName + " not found in the route."
+
+        // Search: Check if a stop is part of the route
+        searchStop(stopName):
+            current = this.head
+            while current is not null:
+                if current.stopName is stopName:
+                    print "Stop " + stopName + " is part of the route."
+                    return true
+                current = current.nextStop
+            print "Stop " + stopName + " is NOT part of the route."
+            return false
+
+        // Utility to display the current route
+        displayRoute():
+            route = ""
+            current = this.head
+            while current is not null:
+                route = route + current.stopName
+                if current.nextStop is not null:
+                    route = route + " -> "
+                current = current.nextStop
+            print "Current Route: " + route
+
+// Example Run:
+// route = new BusRouteLinkedList()
+
+// Initial route:
+// route.addStop("Depot")
+// route.addStop("Main Street")
+// route.addStop("City Mall")
+// route.addStop("Hospital")
+// route.addStop("Airport")
+// route.displayRoute()
+// Expected: Current Route: Depot -> Main Street -> City Mall -> Hospital -> Airport
+
+// City adds University Stop after City Mall:
+// route.addStop("University Stop", "City Mall")
+// route.displayRoute()
+// Expected: Current Route: Depot -> Main Street -> City Mall -> University Stop -> Hospital -> Airport
+
+// Later, removes the Hospital due to road closure:
+// route.removeStop("Hospital")
+// route.displayRoute()
+// Expected: Current Route: Depot -> Main Street -> City Mall -> University Stop -> Airport
+
+// Passenger searches for Airport:
+// route.searchStop("Airport")
+// Expected: Stop Airport is part of the route.
+
+// Passenger searches for a non-existent stop:
+// route.searchStop("Old Town")
+// Expected: Stop Old Town is NOT part of the route.

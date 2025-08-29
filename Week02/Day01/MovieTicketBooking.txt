@@ -1,0 +1,243 @@
+// Movie Ticket Booking System
+
+// Problem Description:
+// Develop a movie ticket booking system for a startup cinema chain.
+// The system needs to handle Tickets (movie name, seat number, price, booking status),
+// Theatres (movie schedules, available seats, issue/cancel tickets), and Customers (browse movies, book/cancel tickets).
+// The system should demonstrate encapsulation, object interaction, and class composition.
+
+// Learning Points:
+// - Encapsulation: Bundling data and methods that operate on the data within a single unit.
+// - Object Interaction: How different objects communicate and collaborate to achieve a task.
+// - Class Composition: Building complex objects by combining simpler objects.
+// - Real-world modeling of a ticketing system.
+
+// ----------------------------------------------------------------------------------------------------
+
+// 1. Ticket Class
+// Represents a single movie ticket.
+CLASS Ticket:
+    ticketId: STRING
+    movieName: STRING
+    seatNumber: STRING
+    price: DOUBLE
+    isBooked: BOOLEAN
+
+    // Constructor
+    CONSTRUCTOR Ticket(ticketId: STRING, movieName: STRING, seatNumber: STRING, price: DOUBLE):
+        THIS.ticketId = ticketId
+        THIS.movieName = movieName
+        THIS.seatNumber = seatNumber
+        THIS.price = price
+        THIS.isBooked = TRUE // Initially booked when created
+
+    // Method to cancel the ticket.
+    METHOD cancel():
+        IF THIS.isBooked:
+            THIS.isBooked = FALSE
+            PRINT "Ticket " + THIS.ticketId + " for " + THIS.movieName + " (Seat: " + THIS.seatNumber + ") has been cancelled."
+            RETURN TRUE
+        ELSE:
+            PRINT "Ticket " + THIS.ticketId + " is already cancelled or not booked."
+            RETURN FALSE
+
+    // Getters
+    METHOD getTicketId() RETURNS STRING:
+        RETURN THIS.ticketId
+    METHOD getMovieName() RETURNS STRING:
+        RETURN THIS.movieName
+    METHOD getSeatNumber() RETURNS STRING:
+        RETURN THIS.seatNumber
+    METHOD getPrice() RETURNS DOUBLE:
+        RETURN THIS.price
+    METHOD getIsBooked() RETURNS BOOLEAN:
+        RETURN THIS.isBooked
+
+    // Override toString for easy printing
+    METHOD toString() RETURNS STRING:
+        status = IF isBooked THEN "Booked" ELSE "Cancelled"
+        RETURN "Ticket[ID: " + ticketId + ", Movie: " + movieName + ", Seat: " + seatNumber + ", Price: " + price + ", Status: " + status + "]"
+
+// ----------------------------------------------------------------------------------------------------
+
+// 2. Theatre Class
+// Manages movie schedules, seat availability, and ticket operations.
+CLASS Theatre:
+    name: STRING
+    // Map to store movie schedules: MovieName -> List of Showtimes
+    movieSchedules: MAP<STRING, LIST<STRING>>
+    // Map to store seat availability for each movie and showtime: MovieName_Showtime -> List of available seats
+    availableSeats: MAP<STRING, LIST<STRING>>
+    // Counter for generating unique ticket IDs
+    ticketIdCounter: INTEGER
+
+    // Constructor
+    CONSTRUCTOR Theatre(name: STRING):
+        THIS.name = name
+        movieSchedules = NEW MAP<STRING, LIST<STRING>>()
+        availableSeats = NEW MAP<STRING, LIST<STRING>>()
+        ticketIdCounter = 1000
+
+    // Method to add a movie and its showtimes.
+    METHOD addMovieSchedule(movieName: STRING, showtimes: LIST<STRING>, totalSeats: LIST<STRING>):
+        movieSchedules.PUT(movieName, showtimes)
+        FOR EACH showtime IN showtimes:
+            key = movieName + "_" + showtime
+            availableSeats.PUT(key, NEW LIST<STRING>(totalSeats)) // Copy of total seats
+        PRINT "Added schedule for " + movieName + " at " + showtimes.TO_STRING()
+
+    // Method to check seat availability.
+    // RETURNS: BOOLEAN indicating if the seat is available.
+    METHOD checkSeatAvailability(movieName: STRING, showtime: STRING, seatNumber: STRING) RETURNS BOOLEAN:
+        key = movieName + "_" + showtime
+        IF availableSeats.CONTAINS_KEY(key):
+            RETURN availableSeats.GET(key).CONTAINS(seatNumber)
+        RETURN FALSE
+
+    // Method to issue a ticket.
+    // RETURNS: A Ticket object if successful, otherwise NULL.
+    METHOD issueTicket(movieName: STRING, showtime: STRING, seatNumber: STRING, price: DOUBLE) RETURNS Ticket:
+        IF THIS.checkSeatAvailability(movieName, showtime, seatNumber):
+            key = movieName + "_" + showtime
+            availableSeats.GET(key).REMOVE(seatNumber)
+            ticketId = "T" + ticketIdCounter.TO_STRING()
+            ticketIdCounter = ticketIdCounter + 1
+            PRINT "Issued ticket " + ticketId + " for " + movieName + " (Seat: " + seatNumber + ")"
+            RETURN NEW Ticket(ticketId, movieName, seatNumber, price)
+        ELSE:
+            PRINT "Seat " + seatNumber + " for " + movieName + " at " + showtime + " is not available."
+            RETURN NULL
+
+    // Method to cancel a ticket and make the seat available again.
+    // RETURNS: BOOLEAN indicating if cancellation was successful.
+    METHOD cancelTicket(ticket: Ticket) RETURNS BOOLEAN:
+        IF ticket.getIsBooked():
+            IF ticket.cancel():
+                key = ticket.getMovieName() + "_" + "6 PM" // Assuming 6 PM for simplicity, ideally pass showtime
+                IF availableSeats.CONTAINS_KEY(key):
+                    availableSeats.GET(key).ADD(ticket.getSeatNumber())
+                    PRINT "Seat " + ticket.getSeatNumber() + " for " + ticket.getMovieName() + " is now available."
+                    RETURN TRUE
+            RETURN FALSE
+        ELSE:
+            PRINT "Ticket " + ticket.getTicketId() + " is already cancelled."
+            RETURN FALSE
+
+    // Method to display available movies and showtimes.
+    METHOD displayMovies():
+        PRINT "\n--- Movies at " + THIS.name + " ---"
+        IF movieSchedules.IS_EMPTY():
+            PRINT "No movies scheduled."
+            RETURN
+        movieSchedules.KEY_SET().FOR_EACH(movie => {
+            PRINT "Movie: " + movie + ", Showtimes: " + movieSchedules.GET(movie).TO_STRING()
+        })
+
+    // Method to display available seats for a specific showtime.
+    METHOD displayAvailableSeats(movieName: STRING, showtime: STRING):
+        key = movieName + "_" + showtime
+        IF availableSeats.CONTAINS_KEY(key):
+            PRINT "Available seats for " + movieName + " at " + showtime + ": " + availableSeats.GET(key).TO_STRING()
+        ELSE:
+            PRINT "No schedule found for " + movieName + " at " + showtime + "."
+
+// ----------------------------------------------------------------------------------------------------
+
+// 3. Customer Class
+// Represents a customer who can interact with the theatre.
+CLASS Customer:
+    name: STRING
+    bookedTickets: LIST<Ticket>
+
+    // Constructor
+    CONSTRUCTOR Customer(name: STRING):
+        THIS.name = name
+        bookedTickets = NEW LIST<Ticket>()
+
+    // Method to browse movies (delegates to Theatre).
+    METHOD browseMovies(theatre: Theatre):
+        theatre.displayMovies()
+
+    // Method to book a ticket.
+    // RETURNS: BOOLEAN indicating if booking was successful.
+    METHOD bookTicket(theatre: Theatre, movieName: STRING, showtime: STRING, seatNumber: STRING, price: DOUBLE) RETURNS BOOLEAN:
+        PRINT "\n" + THIS.name + " attempting to book ticket for " + movieName + " (Seat: " + seatNumber + ")"
+        ticket = theatre.issueTicket(movieName, showtime, seatNumber, price)
+        IF ticket IS NOT NULL:
+            bookedTickets.ADD(ticket)
+            PRINT THIS.name + " successfully booked ticket: " + ticket.getTicketId()
+            RETURN TRUE
+        ELSE:
+            PRINT THIS.name + " failed to book ticket for " + movieName + " (Seat: " + seatNumber + ")"
+            RETURN FALSE
+
+    // Method to cancel a ticket.
+    // RETURNS: BOOLEAN indicating if cancellation was successful.
+    METHOD cancelTicket(theatre: Theatre, ticketId: STRING) RETURNS BOOLEAN:
+        PRINT "\n" + THIS.name + " attempting to cancel ticket " + ticketId
+        ticketToCancel = NULL
+        FOR EACH ticket IN bookedTickets:
+            IF ticket.getTicketId() == ticketId:
+                ticketToCancel = ticket
+                BREAK
+
+        IF ticketToCancel IS NOT NULL:
+            IF theatre.cancelTicket(ticketToCancel):
+                bookedTickets.REMOVE(ticketToCancel)
+                PRINT THIS.name + " successfully cancelled ticket " + ticketId
+                RETURN TRUE
+            ELSE:
+                PRINT THIS.name + " failed to cancel ticket " + ticketId + " via theatre."
+                RETURN FALSE
+        ELSE:
+            PRINT THIS.name + " does not have a ticket with ID " + ticketId + "."
+            RETURN FALSE
+
+    // Method to display customer's booked tickets.
+    METHOD displayBookedTickets():
+        PRINT "\n--- " + THIS.name + "'s Booked Tickets ---"
+        IF bookedTickets.IS_EMPTY():
+            PRINT "No tickets booked."
+            RETURN
+        FOR EACH ticket IN bookedTickets:
+            PRINT ticket.TO_STRING()
+
+// ----------------------------------------------------------------------------------------------------
+
+// 4. Main Program (Example Usage)
+PROGRAM Main:
+    // Initialize Theatre
+    myTheatre = NEW Theatre("Grand Cinema")
+    allSeats = NEW LIST<STRING>()
+    FOR row FROM 'A' TO 'C':
+        FOR col FROM 1 TO 5:
+            allSeats.ADD(row.TO_STRING() + col.TO_STRING())
+
+    myTheatre.addMovieSchedule("Avengers: Endgame", NEW LIST<STRING>("6 PM", "9 PM"), allSeats)
+    myTheatre.addMovieSchedule("Spider-Man: No Way Home", NEW LIST<STRING>("7 PM"), allSeats)
+
+    // Initialize Customer
+    ravi = NEW Customer("Ravi")
+    priya = NEW Customer("Priya")
+
+    // Scenario 1: Ravi books a ticket
+    ravi.browseMovies(myTheatre)
+    myTheatre.displayAvailableSeats("Avengers: Endgame", "6 PM")
+    ravi.bookTicket(myTheatre, "Avengers: Endgame", "6 PM", "A12", 250.0)
+    ravi.displayBookedTickets()
+    myTheatre.displayAvailableSeats("Avengers: Endgame", "6 PM")
+
+    // Scenario 2: Priya tries to book the same seat
+    priya.bookTicket(myTheatre, "Avengers: Endgame", "6 PM", "A12", 250.0)
+
+    // Scenario 3: Ravi cancels the ticket
+    ravi.cancelTicket(myTheatre, "T1000") // Assuming T1000 was the ticket ID issued
+    ravi.displayBookedTickets()
+    myTheatre.displayAvailableSeats("Avengers: Endgame", "6 PM")
+
+    // Scenario 4: Priya books the now available seat
+    priya.bookTicket(myTheatre, "Avengers: Endgame", "6 PM", "A12", 250.0)
+    priya.displayBookedTickets()
+    myTheatre.displayAvailableSeats("Avengers: Endgame", "6 PM")
+
+END PROGRAM

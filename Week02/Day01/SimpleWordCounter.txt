@@ -1,0 +1,88 @@
+// Simple Word Counter
+
+// Problem Description:
+// Develop a simple word counter for a local newspaper editor to analyze word frequency in articles.
+// The system should take a paragraph of text, count word occurrences, normalize words (lowercase, remove punctuation),
+// and display a list of words sorted by frequency.
+
+// Learning Points:
+// - Map: Storing key-value pairs (word -> count).
+// - Stream API: Efficiently processing collections (splitting, filtering, mapping, reducing).
+// - String Manipulation: Lowercasing and removing punctuation.
+// - Sorting: Ordering results based on frequency.
+
+// ----------------------------------------------------------------------------------------------------
+
+// 1. WordCounter Class
+// Counts word frequencies in a given text.
+CLASS WordCounter:
+
+    // Method to count word occurrences in a paragraph.
+    // RETURNS: A Map<String, Integer> where keys are words and values are their counts.
+    METHOD countWords(paragraph: STRING) RETURNS MAP<STRING, INTEGER>:
+        wordCounts = NEW MAP<STRING, INTEGER>()
+
+        // 1. Normalize and split the text into words using Stream API concepts.
+        // Convert to lowercase, remove punctuation, split by whitespace.
+        words = paragraph.TO_LOWER_CASE()
+                         .REPLACE_ALL("[^a-z0-9\s]", "") // Remove non-alphanumeric characters except spaces
+                         .SPLIT("\\s+") // Split by one or more whitespace characters
+                         .FILTER(word -> !word.IS_EMPTY()) // Remove empty strings resulting from split
+
+        // 2. Count occurrences.
+        FOR EACH word IN words:
+            wordCounts.PUT(word, wordCounts.GET_OR_DEFAULT(word, 0) + 1)
+
+        RETURN wordCounts
+
+    // Method to display word counts sorted by frequency (descending).
+    METHOD displaySortedWordCounts(wordCounts: MAP<STRING, INTEGER>):
+        PRINT "\n--- Word Frequencies (Sorted by Count) ---"
+
+        IF wordCounts.IS_EMPTY():
+            PRINT "No words to display."
+            RETURN
+
+        // Convert map entries to a list and sort them.
+        sortedEntries = NEW LIST<MAP.ENTRY<STRING, INTEGER>>(wordCounts.ENTRY_SET())
+
+        // Sort by value (count) in descending order.
+        // If counts are equal, sort by key (word) in ascending order for consistent output.
+        sortedEntries.SORT((entry1, entry2) -> {
+            countCompare = entry2.GET_VALUE().COMPARE_TO(entry1.GET_VALUE())
+            IF countCompare == 0:
+                RETURN entry1.GET_KEY().COMPARE_TO(entry2.GET_KEY())
+            RETURN countCompare
+        })
+
+        // Print the sorted results.
+        FOR EACH entry IN sortedEntries:
+            PRINT entry.GET_KEY() + " → " + entry.GET_VALUE()
+
+// ----------------------------------------------------------------------------------------------------
+
+// 2. Main Program (Example Usage)
+PROGRAM Main:
+    counter = NEW WordCounter()
+
+    paragraph1 = "The news today is about the rise in technology trends."
+    PRINT "\nProcessing Paragraph 1: " + paragraph1
+    counts1 = counter.countWords(paragraph1)
+    counter.displaySortedWordCounts(counts1)
+
+    paragraph2 = "Java is a programming language. Java is widely used for enterprise applications. Java is powerful."
+    PRINT "\nProcessing Paragraph 2: " + paragraph2
+    counts2 = counter.countWords(paragraph2)
+    counter.displaySortedWordCounts(counts2)
+
+    paragraph3 = "A quick brown fox jumps over the lazy dog. The dog barks."
+    PRINT "\nProcessing Paragraph 3: " + paragraph3
+    counts3 = counter.countWords(paragraph3)
+    counter.displaySortedWordCounts(counts3)
+
+    paragraph4 = ""
+    PRINT "\nProcessing Empty Paragraph: " + paragraph4
+    counts4 = counter.countWords(paragraph4)
+    counter.displaySortedWordCounts(counts4)
+
+END PROGRAM

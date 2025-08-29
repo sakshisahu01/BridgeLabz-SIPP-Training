@@ -1,0 +1,84 @@
+// Daily Tasks Organizer
+
+// Problem Description:
+// Create a personal productivity tool for a busy marketing manager named Anita.
+// She plans her daily tasks every morning and wants them displayed in the exact order she enters them.
+// The tool should use a LinkedHashMap to preserve insertion order.
+
+// Learning Points:
+// - LinkedHashMap: Understanding its properties, especially insertion order preservation.
+// - Data Structures: Choosing the right data structure for specific requirements.
+// - Basic CRUD operations (Create, Read, Update, Delete) on a map.
+// - Auto-generating unique IDs.
+
+// ----------------------------------------------------------------------------------------------------
+
+// 1. DailyTasksOrganizer Class
+// Manages daily tasks using a LinkedHashMap to preserve insertion order.
+CLASS DailyTasksOrganizer:
+    tasks: LINKED_HASH_MAP<INTEGER, STRING> // Key: Task ID, Value: Task description
+    nextTaskId: INTEGER
+
+    // Constructor
+    CONSTRUCTOR DailyTasksOrganizer():
+        tasks = NEW LINKED_HASH_MAP<INTEGER, STRING>()
+        nextTaskId = 1
+
+    // Method to add a new task.
+    // RETURNS: The ID of the newly added task.
+    METHOD addTask(description: STRING) RETURNS INTEGER:
+        taskId = nextTaskId
+        tasks.PUT(taskId, description)
+        nextTaskId = nextTaskId + 1
+        PRINT "Added task " + taskId + ": " + description
+        RETURN taskId
+
+    // Method to remove a task by its ID.
+    // RETURNS: BOOLEAN indicating if the task was successfully removed.
+    METHOD removeTask(taskId: INTEGER) RETURNS BOOLEAN:
+        IF tasks.CONTAINS_KEY(taskId):
+            removedDescription = tasks.REMOVE(taskId)
+            PRINT "Removed task " + taskId + ": " + removedDescription
+            RETURN TRUE
+        ELSE:
+            PRINT "Task with ID " + taskId + " not found."
+            RETURN FALSE
+
+    // Method to view all pending tasks in their original insertion order.
+    METHOD viewTasks():
+        PRINT "\n--- Current Daily Tasks (in order) ---"
+        IF tasks.IS_EMPTY():
+            PRINT "No tasks for today!"
+            RETURN
+        FOR EACH entry IN tasks.ENTRY_SET():
+            PRINT entry.KEY + " → " + entry.VALUE
+
+// ----------------------------------------------------------------------------------------------------
+
+// 2. Main Program (Example Usage)
+PROGRAM Main:
+    organizer = NEW DailyTasksOrganizer()
+
+    // Scenario 1: Morning entry of tasks
+    PRINT "\n--- Morning Entry ---"
+    organizer.addTask("Check emails")
+    organizer.addTask("Prepare sales report")
+    organizer.addTask("Call client")
+    organizer.viewTasks()
+
+    // Scenario 2: Midday, task 2 is removed after completion.
+    PRINT "\n--- Midday: Task 2 Completed ---"
+    organizer.removeTask(2)
+    organizer.viewTasks()
+
+    // Scenario 3: Add a new task later in the day.
+    PRINT "\n--- Afternoon: Adding a New Task ---"
+    organizer.addTask("Review marketing strategy")
+    organizer.viewTasks()
+
+    // Scenario 4: Try to remove a non-existent task.
+    PRINT "\n--- Attempting to Remove Non-Existent Task ---"
+    organizer.removeTask(99)
+    organizer.viewTasks()
+
+END PROGRAM
